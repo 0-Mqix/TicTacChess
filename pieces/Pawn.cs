@@ -8,6 +8,13 @@
 
         public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position) {  
             List<int> legalMoves = new();
+            
+            int newPosition = position + (color == PieceColor.Black ? 3 : -3);
+
+            if (!pieces.ContainsKey(newPosition)) {
+                legalMoves.Add(newPosition);
+            }
+            
             return legalMoves;
         }
 

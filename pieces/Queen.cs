@@ -9,10 +9,6 @@
         public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position) {  
             List<int> legalMoves = new();
 
-            if (!pieces.ContainsKey(position - 3)) {
-                legalMoves.Add(position - 3);
-            };
-
             return legalMoves;
         }
 

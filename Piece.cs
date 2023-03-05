@@ -1,9 +1,10 @@
 ﻿namespace TicTacChess {
-   
+
     enum PieceColor {
         White,
         Black
     }
+
 
     interface IPiece {
        public PieceColor Color();
