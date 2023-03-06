@@ -34,20 +34,18 @@
             // game
             // 
             this.game.BackColor = System.Drawing.Color.White;
-            this.game.Location = new System.Drawing.Point(10, 9);
-            this.game.Margin = new System.Windows.Forms.Padding(2);
+            this.game.Location = new System.Drawing.Point(14, 15);
             this.game.Name = "game";
             this.game.Size = new System.Drawing.Size(300, 300);
             this.game.TabIndex = 0;
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(954, 466);
+            this.ClientSize = new System.Drawing.Size(1363, 777);
             this.Controls.Add(this.game);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Main";
             this.Text = "Main";
             this.ResumeLayout(false);

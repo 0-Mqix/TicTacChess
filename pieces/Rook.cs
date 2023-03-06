@@ -8,15 +8,21 @@
 
         public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position) {  
             List<int> legalMoves = new();
+
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Left, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Right, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Up, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Down, position);
+
             return legalMoves;
         }
 
         public Image Image() {
             if (color == PieceColor.Black) {
-                return Properties.Resources.b_p;
+                return Properties.Resources.b_r;
             }
             
-            return Properties.Resources.w_p;        
+            return Properties.Resources.w_r;        
         }
 
         public PieceColor Color() {

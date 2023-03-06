@@ -15,6 +15,7 @@
             Size = new Size(squareSize * 3, squareSize * 3);
 
             pieces.Add(8, new Pawn(PieceColor.White));
+            pieces.Add(1, new Rook(PieceColor.White));
             pieces.Add(0, new Pawn(PieceColor.Black));
         }
 
@@ -34,8 +35,9 @@
             int h = image.Height / 3;
 
             Point point = PointToClient(MousePosition);
-
             graphics.DrawImage(image, point.X - w / 2, point.Y - h / 2, w, h);
+            image.Dispose();
+
         }
 
         public void DrawBoard(Graphics graphics) {
@@ -43,17 +45,17 @@
             int y = 0;
 
             for (int i = 0; i < 9; i++) {
-                Pen pen = new(i % 2 == 0 ? Color.LightBlue : Color.White);
-
                 int actualX = x * squareSize;
                 int actualY = y * squareSize;
 
+                Pen pen = new(i % 2 == 0 ? Color.LightBlue : Color.White);
                 graphics.FillRectangle(pen.Brush, actualX, actualY, squareSize, squareSize);
                 pen.Dispose();
 
                 if (pieces.ContainsKey(i) && currentPosition != i) {
                     Image image = pieces[i].Image();
                     graphics.DrawImage(image, actualX + 25, actualY, image.Width / 3, image.Height / 3);
+                    image.Dispose();
                 } else if (currentPiece != null && legalMoves.Contains(i)) {
                     
                     int centerOffset = (squareSize / 2 + legalMoveDotSize) / 2;
@@ -99,8 +101,9 @@
         }
 
         protected override void OnPaint(PaintEventArgs e) {
-            DrawBoard(e.Graphics);
-            DrawCursor(e.Graphics);
+           DrawBoard(e.Graphics);
+           DrawCursor(e.Graphics);
+
             base.OnPaint(e);
         }
 
