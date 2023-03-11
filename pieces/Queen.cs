@@ -9,6 +9,17 @@
         public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position) {  
             List<int> legalMoves = new();
 
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Left, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Right, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Up, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.Down, position);
+
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.UpLeft, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.UpRight, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.DownLeft, position);
+            PieceUtils.CheckDirection(legalMoves, pieces, Direction.DownRight, position);
+
+
             return legalMoves;
         }
 

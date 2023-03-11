@@ -1,7 +1,7 @@
 ﻿namespace TicTacChess {
     internal class Game : Panel {
         int squareSize = 100;
-        int legalMoveDotSize = 25;
+        int legalMoveDotSize;
 
 
         Dictionary<int, IPiece> pieces = new Dictionary<int, IPiece>();
@@ -12,12 +12,12 @@
 
         public Game() : base() {
             DoubleBuffered = true;
+            legalMoveDotSize = squareSize / 4;
             Size = new Size(squareSize * 3, squareSize * 3);
 
-            pieces.Add(8, new Pawn(PieceColor.White));
-            pieces.Add(1, new Rook(PieceColor.White));
-            pieces.Add(0, new Pawn(PieceColor.Black));
-        }
+            pieces.Add(8, new Queen(PieceColor.White));
+            pieces.Add(6, new Knight(PieceColor.White));
+          }
 
         protected override void OnMouseMove(MouseEventArgs e) {
             Invalidate();
@@ -54,7 +54,7 @@
 
                 if (pieces.ContainsKey(i) && currentPosition != i) {
                     Image image = pieces[i].Image();
-                    graphics.DrawImage(image, actualX + 25, actualY, image.Width / 3, image.Height / 3);
+                    graphics.DrawImage(image, actualX + squareSize / 4, actualY, image.Width / 3, image.Height / 3);
                     image.Dispose();
                 } else if (currentPiece != null && legalMoves.Contains(i)) {
                     
@@ -107,7 +107,15 @@
             base.OnPaint(e);
         }
 
+        protected override void OnSizeChanged(EventArgs e) {
+            Size size = new(squareSize * 3, squareSize * 3);
+           
+            if (!Size.Equals(size)) {
+                Size = size;
+            }
 
+            base.OnSizeChanged(e);  
+        }
         protected override void OnClick(EventArgs e) {
             MouseEventArgs args = (MouseEventArgs)e;
 
@@ -126,10 +134,6 @@
                 currentPiece = pieces[position];
 
                 legalMoves = currentPiece.LegalMoves(pieces, position).ToHashSet();
-
-                foreach (var move in legalMoves) {
-                    Utils.Println($"legal move: {move} for position: {position}");
-                }
 
             } else if (currentPiece != null 
                 && !pieces.ContainsKey(position) 
