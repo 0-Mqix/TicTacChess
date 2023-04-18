@@ -6,7 +6,7 @@
             this.color = color;
         }
 
-        public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position) {  
+        public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position, int totalMoves) {  
             List<int> legalMoves = new();
 
             PieceUtils.CheckDirection(legalMoves, pieces, Direction.Left, position);

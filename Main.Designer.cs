@@ -33,16 +33,33 @@
             this.checkBoxBlack = new System.Windows.Forms.CheckBox();
             this.pieceSelectorKnight = new System.Windows.Forms.PictureBox();
             this.pieceSelectorRook = new System.Windows.Forms.PictureBox();
+            this.pieceSelectorPawn = new System.Windows.Forms.PictureBox();
             this.pieceSelectorQueen = new System.Windows.Forms.PictureBox();
+            this.pieceSelectorWizard = new System.Windows.Forms.PictureBox();
+            this.pieceSelectorKing = new System.Windows.Forms.PictureBox();
+            this.statusLabel = new System.Windows.Forms.Label();
+            this.resetButton = new System.Windows.Forms.Button();
+            this.useArduinoCheckBox = new System.Windows.Forms.CheckBox();
+            this.startButton = new System.Windows.Forms.Button();
+            this.arduinoGroupBox = new System.Windows.Forms.GroupBox();
+            this.enableArduinoLabel = new System.Windows.Forms.Label();
+            this.arduinoProgress = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.pieceSelectorGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorKnight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorRook)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorPawn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorQueen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorWizard)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorKing)).BeginInit();
+            this.arduinoGroupBox.SuspendLayout();
+            this.pieceSelectorGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // game
             // 
             this.game.BackColor = System.Drawing.Color.White;
-            this.game.Location = new System.Drawing.Point(10, 9);
+            this.game.Location = new System.Drawing.Point(12, 88);
             this.game.Margin = new System.Windows.Forms.Padding(2);
             this.game.Name = "game";
             this.game.Size = new System.Drawing.Size(300, 300);
@@ -50,11 +67,12 @@
             // 
             // checkBoxWhite
             // 
+            this.checkBoxWhite.AutoCheck = false;
             this.checkBoxWhite.AutoSize = true;
-            this.checkBoxWhite.Location = new System.Drawing.Point(335, 9);
+            this.checkBoxWhite.Location = new System.Drawing.Point(22, 27);
             this.checkBoxWhite.Margin = new System.Windows.Forms.Padding(0);
             this.checkBoxWhite.Name = "checkBoxWhite";
-            this.checkBoxWhite.Size = new System.Drawing.Size(55, 19);
+            this.checkBoxWhite.Size = new System.Drawing.Size(80, 29);
             this.checkBoxWhite.TabIndex = 1;
             this.checkBoxWhite.Text = "white";
             this.checkBoxWhite.UseVisualStyleBackColor = true;
@@ -62,11 +80,12 @@
             // 
             // checkBoxBlack
             // 
+            this.checkBoxBlack.AutoCheck = false;
             this.checkBoxBlack.AutoSize = true;
-            this.checkBoxBlack.Location = new System.Drawing.Point(335, 28);
+            this.checkBoxBlack.Location = new System.Drawing.Point(23, 56);
             this.checkBoxBlack.Margin = new System.Windows.Forms.Padding(0);
             this.checkBoxBlack.Name = "checkBoxBlack";
-            this.checkBoxBlack.Size = new System.Drawing.Size(54, 19);
+            this.checkBoxBlack.Size = new System.Drawing.Size(79, 29);
             this.checkBoxBlack.TabIndex = 8;
             this.checkBoxBlack.Text = "black";
             this.checkBoxBlack.UseVisualStyleBackColor = true;
@@ -75,57 +94,200 @@
             // pieceSelectorKnight
             // 
             this.pieceSelectorKnight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pieceSelectorKnight.Location = new System.Drawing.Point(335, 153);
+            this.pieceSelectorKnight.Location = new System.Drawing.Point(22, 191);
             this.pieceSelectorKnight.Margin = new System.Windows.Forms.Padding(2);
             this.pieceSelectorKnight.Name = "pieceSelectorKnight";
             this.pieceSelectorKnight.Size = new System.Drawing.Size(100, 100);
             this.pieceSelectorKnight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pieceSelectorKnight.TabIndex = 9;
             this.pieceSelectorKnight.TabStop = false;
+            this.pieceSelectorKnight.Tag = "knight";
             this.pieceSelectorKnight.Click += new System.EventHandler(this.PieceSelector_Click);
             // 
             // pieceSelectorRook
             // 
             this.pieceSelectorRook.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pieceSelectorRook.Location = new System.Drawing.Point(335, 257);
+            this.pieceSelectorRook.Location = new System.Drawing.Point(22, 295);
             this.pieceSelectorRook.Margin = new System.Windows.Forms.Padding(2);
             this.pieceSelectorRook.Name = "pieceSelectorRook";
             this.pieceSelectorRook.Size = new System.Drawing.Size(100, 100);
             this.pieceSelectorRook.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pieceSelectorRook.TabIndex = 10;
             this.pieceSelectorRook.TabStop = false;
+            this.pieceSelectorRook.Tag = "rook";
             this.pieceSelectorRook.Click += new System.EventHandler(this.PieceSelector_Click);
+            // 
+            // pieceSelectorPawn
+            // 
+            this.pieceSelectorPawn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pieceSelectorPawn.Location = new System.Drawing.Point(22, 87);
+            this.pieceSelectorPawn.Margin = new System.Windows.Forms.Padding(2);
+            this.pieceSelectorPawn.Name = "pieceSelectorPawn";
+            this.pieceSelectorPawn.Size = new System.Drawing.Size(100, 100);
+            this.pieceSelectorPawn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pieceSelectorPawn.TabIndex = 11;
+            this.pieceSelectorPawn.TabStop = false;
+            this.pieceSelectorPawn.Tag = "pawn";
+            this.pieceSelectorPawn.Click += new System.EventHandler(this.PieceSelector_Click);
             // 
             // pieceSelectorQueen
             // 
             this.pieceSelectorQueen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pieceSelectorQueen.Location = new System.Drawing.Point(335, 49);
+            this.pieceSelectorQueen.Location = new System.Drawing.Point(126, 87);
             this.pieceSelectorQueen.Margin = new System.Windows.Forms.Padding(2);
             this.pieceSelectorQueen.Name = "pieceSelectorQueen";
             this.pieceSelectorQueen.Size = new System.Drawing.Size(100, 100);
             this.pieceSelectorQueen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pieceSelectorQueen.TabIndex = 11;
+            this.pieceSelectorQueen.TabIndex = 12;
             this.pieceSelectorQueen.TabStop = false;
+            this.pieceSelectorQueen.Tag = "queen";
             this.pieceSelectorQueen.Click += new System.EventHandler(this.PieceSelector_Click);
+            // 
+            // pieceSelectorWizard
+            // 
+            this.pieceSelectorWizard.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pieceSelectorWizard.Location = new System.Drawing.Point(126, 295);
+            this.pieceSelectorWizard.Margin = new System.Windows.Forms.Padding(2);
+            this.pieceSelectorWizard.Name = "pieceSelectorWizard";
+            this.pieceSelectorWizard.Size = new System.Drawing.Size(100, 100);
+            this.pieceSelectorWizard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pieceSelectorWizard.TabIndex = 13;
+            this.pieceSelectorWizard.TabStop = false;
+            this.pieceSelectorWizard.Tag = "wizard";
+            this.pieceSelectorWizard.Click += new System.EventHandler(this.PieceSelector_Click);
+            // 
+            // pieceSelectorKing
+            // 
+            this.pieceSelectorKing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pieceSelectorKing.Location = new System.Drawing.Point(126, 191);
+            this.pieceSelectorKing.Margin = new System.Windows.Forms.Padding(2);
+            this.pieceSelectorKing.Name = "pieceSelectorKing";
+            this.pieceSelectorKing.Size = new System.Drawing.Size(100, 100);
+            this.pieceSelectorKing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pieceSelectorKing.TabIndex = 14;
+            this.pieceSelectorKing.TabStop = false;
+            this.pieceSelectorKing.Tag = "king";
+            this.pieceSelectorKing.Click += new System.EventHandler(this.PieceSelector_Click);
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.statusLabel.Location = new System.Drawing.Point(12, 24);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(176, 41);
+            this.statusLabel.TabIndex = 15;
+            this.statusLabel.Text = "State: Setup";
+            // 
+            // resetButton
+            // 
+            this.resetButton.Location = new System.Drawing.Point(167, 393);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(145, 42);
+            this.resetButton.TabIndex = 16;
+            this.resetButton.Text = "reset";
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
+            // 
+            // useArduinoCheckBox
+            // 
+            this.useArduinoCheckBox.AutoSize = true;
+            this.useArduinoCheckBox.Location = new System.Drawing.Point(155, 31);
+            this.useArduinoCheckBox.Name = "useArduinoCheckBox";
+            this.useArduinoCheckBox.Size = new System.Drawing.Size(22, 21);
+            this.useArduinoCheckBox.TabIndex = 17;
+            this.useArduinoCheckBox.UseVisualStyleBackColor = true;
+            this.useArduinoCheckBox.CheckedChanged += new System.EventHandler(this.UseArduino_Changed);
+            // 
+            // startButton
+            // 
+            this.startButton.Location = new System.Drawing.Point(12, 393);
+            this.startButton.Name = "startButton";
+            this.startButton.Size = new System.Drawing.Size(149, 42);
+            this.startButton.TabIndex = 18;
+            this.startButton.Text = "start";
+            this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.StartButton_Click);
+            // 
+            // arduinoGroupBox
+            // 
+            this.arduinoGroupBox.Controls.Add(this.enableArduinoLabel);
+            this.arduinoGroupBox.Controls.Add(this.arduinoProgress);
+            this.arduinoGroupBox.Controls.Add(this.progressBar1);
+            this.arduinoGroupBox.Controls.Add(this.useArduinoCheckBox);
+            this.arduinoGroupBox.Location = new System.Drawing.Point(12, 494);
+            this.arduinoGroupBox.Name = "arduinoGroupBox";
+            this.arduinoGroupBox.Size = new System.Drawing.Size(558, 285);
+            this.arduinoGroupBox.TabIndex = 19;
+            this.arduinoGroupBox.TabStop = false;
+            this.arduinoGroupBox.Text = "Arduino";
+            // 
+            // enableArduinoLabel
+            // 
+            this.enableArduinoLabel.AutoSize = true;
+            this.enableArduinoLabel.Location = new System.Drawing.Point(6, 27);
+            this.enableArduinoLabel.Name = "enableArduinoLabel";
+            this.enableArduinoLabel.Size = new System.Drawing.Size(64, 25);
+            this.enableArduinoLabel.TabIndex = 20;
+            this.enableArduinoLabel.Text = "enable";
+            // 
+            // arduinoProgress
+            // 
+            this.arduinoProgress.AutoSize = true;
+            this.arduinoProgress.Location = new System.Drawing.Point(6, 58);
+            this.arduinoProgress.Name = "arduinoProgress";
+            this.arduinoProgress.Size = new System.Drawing.Size(103, 25);
+            this.arduinoProgress.TabIndex = 19;
+            this.arduinoProgress.Text = "queue (0/0)";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(155, 58);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(372, 25);
+            this.progressBar1.TabIndex = 18;
+            // 
+            // pieceSelectorGroupBox
+            // 
+            this.pieceSelectorGroupBox.Controls.Add(this.checkBoxWhite);
+            this.pieceSelectorGroupBox.Controls.Add(this.pieceSelectorKnight);
+            this.pieceSelectorGroupBox.Controls.Add(this.pieceSelectorRook);
+            this.pieceSelectorGroupBox.Controls.Add(this.checkBoxBlack);
+            this.pieceSelectorGroupBox.Controls.Add(this.pieceSelectorPawn);
+            this.pieceSelectorGroupBox.Controls.Add(this.pieceSelectorKing);
+            this.pieceSelectorGroupBox.Controls.Add(this.pieceSelectorQueen);
+            this.pieceSelectorGroupBox.Controls.Add(this.pieceSelectorWizard);
+            this.pieceSelectorGroupBox.Location = new System.Drawing.Point(319, 76);
+            this.pieceSelectorGroupBox.Name = "pieceSelectorGroupBox";
+            this.pieceSelectorGroupBox.Size = new System.Drawing.Size(251, 412);
+            this.pieceSelectorGroupBox.TabIndex = 20;
+            this.pieceSelectorGroupBox.TabStop = false;
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(954, 466);
-            this.Controls.Add(this.checkBoxWhite);
-            this.Controls.Add(this.pieceSelectorQueen);
-            this.Controls.Add(this.checkBoxBlack);
+            this.ClientSize = new System.Drawing.Size(582, 791);
+            this.Controls.Add(this.pieceSelectorGroupBox);
+            this.Controls.Add(this.arduinoGroupBox);
+            this.Controls.Add(this.startButton);
+            this.Controls.Add(this.resetButton);
+            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.game);
-            this.Controls.Add(this.pieceSelectorRook);
-            this.Controls.Add(this.pieceSelectorKnight);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Main";
-            this.Text = "Main";
+            this.Text = "TicTacChess";
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorKnight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorRook)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorPawn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorQueen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorWizard)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorKing)).EndInit();
+            this.arduinoGroupBox.ResumeLayout(false);
+            this.arduinoGroupBox.PerformLayout();
+            this.pieceSelectorGroupBox.ResumeLayout(false);
+            this.pieceSelectorGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,6 +300,18 @@
         private CheckBox checkBoxBlack;
         private PictureBox pieceSelectorKnight;
         private PictureBox pieceSelectorRook;
+        private PictureBox pieceSelectorPawn;
         private PictureBox pieceSelectorQueen;
+        private PictureBox pieceSelectorWizard;
+        private PictureBox pieceSelectorKing;
+        private Label statusLabel;
+        private Button resetButton;
+        private CheckBox useArduinoCheckBox;
+        private Button startButton;
+        private GroupBox arduinoGroupBox;
+        private GroupBox pieceSelectorGroupBox;
+        private Label arduinoProgress;
+        private ProgressBar progressBar1;
+        private Label enableArduinoLabel;
     }
 }

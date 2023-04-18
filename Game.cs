@@ -1,24 +1,58 @@
 ﻿namespace TicTacChess {
+
+    enum State {
+        Setup,
+        Playing,
+        Waiting,
+        Finished,
+    }
+
     internal class Game : Panel {
-        int squareSize = 100;
-        int legalMoveDotSize;
+         Main main;
 
+        readonly int squareSize = 100;
+        readonly int legalMoveDotSize = 25;
 
-        Dictionary<int, IPiece> pieces = new Dictionary<int, IPiece>();
-        HashSet<int> legalMoves = new HashSet<int>();
+        //dictonary to store the piece with its location
+        Dictionary<int, IPiece> pieces = new();
+        
+        //a hash set for easy lookup to check if a position is in the legal moves
+        HashSet<int> legalMoves = new();
+        
         IPiece? currentPiece = null;
         int currentPosition = -1;
+        
+
+        //if the game has won this is set and used in the drawing of the squares to make them green
+        HashSet<int>? stripe;
+        Dictionary<int, IPiece> whiteStart = new();
+        Dictionary<int, IPiece> blackStart = new();
+        
+        State state = State.Setup;
         PieceColor currentColor = PieceColor.White;
+        int totalMoves;
 
         public Game() : base() {
             DoubleBuffered = true;
-            legalMoveDotSize = squareSize / 4;
             Size = new Size(squareSize * 3, squareSize * 3);
-
-            pieces.Add(8, new Queen(PieceColor.White));
-            pieces.Add(6, new Knight(PieceColor.White));
           }
 
+
+        public void Reset() {
+            pieces.Clear();
+            legalMoves.Clear();
+            whiteStart.Clear();
+            blackStart.Clear();
+            
+            currentPiece = null;
+            currentPosition = -1;
+
+            stripe = null;
+            totalMoves = 0;
+            currentColor = PieceColor.White;
+        }
+
+        //the control has to be redrawn so it draws the selected piece
         protected override void OnMouseMove(MouseEventArgs e) {
             Invalidate();
             base.OnMouseMove(e);
@@ -35,6 +69,7 @@
             int h = image.Height / 3;
 
             Point point = PointToClient(MousePosition);
+            //attempt to draw image on mouse pointer
             graphics.DrawImage(image, point.X - w / 2, point.Y - h / 2, w, h);
             image.Dispose();
 
@@ -48,18 +83,34 @@
                 int actualX = x * squareSize;
                 int actualY = y * squareSize;
 
+
                 Pen pen = new(i % 2 == 0 ? Color.LightBlue : Color.White);
+
                 graphics.FillRectangle(pen.Brush, actualX, actualY, squareSize, squareSize);
+
+
+                if (stripe != null && stripe.Contains(i)) {
+                    Pen stripePen = new(Color.LightSeaGreen);
+                    graphics.FillRectangle(stripePen.Brush, actualX + 10, actualY + 10, squareSize-20, squareSize-20);
+                    stripePen.Dispose();   
+                }
+
+
+
                 pen.Dispose();
 
                 if (pieces.ContainsKey(i) && currentPosition != i) {
                     Image image = pieces[i].Image();
+                   
+                    //attempt to draw image in center
                     graphics.DrawImage(image, actualX + squareSize / 4, actualY, image.Width / 3, image.Height / 3);
                     image.Dispose();
-                } else if (currentPiece != null && legalMoves.Contains(i)) {
-                    
+                }
+                
+                if (legalMoves.Contains(i)) {
+                    //attempt to to draw a circle in the center
                     int centerOffset = (squareSize / 2 + legalMoveDotSize) / 2;
-                    Pen legalMovePen = new(Color.Gray);
+                    Pen legalMovePen = new(pieces.ContainsKey(i) ? Color.BlueViolet : Color.Gray);
                     
                     graphics.FillEllipse(
                         legalMovePen.Brush,
@@ -100,26 +151,121 @@
             return position;
         }
 
+        public void Start() {
+            state = State.Playing;
+
+            foreach (var piece in pieces) {
+                if (piece.Value.Color() == PieceColor.Black) {
+                    blackStart.Add(piece.Key, piece.Value);
+                    continue;
+                }   
+                
+                whiteStart.Add(piece.Key, piece.Value);
+            }
+
+            main.UpdateColor(PieceColor.White);
+        }
+
+        #region check board
+        //returns a bool for the win, and a list of the positions that makes the stripe of the winning pieces
+        public (bool, List<int>) Check(int postion) {
+
+            var cords = PieceUtils.IntToCordinates(postion);
+
+            int x = cords.Item1;
+            int y = cords.Item2;    
+
+            var stripe = new List<int>();
+
+            //check col
+            for (int i = 0; i < 3; i++) {
+
+                int p = PieceUtils.CordinatesToInt(x, i);
+                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
+                    break;
+                }
+
+                stripe.Add(PieceUtils.CordinatesToInt(x, i));
+                if (i == 2) {
+                    return (true, stripe);
+                }
+            }
+
+            //check row
+            stripe.Clear();
+            for (int i = 0; i < 3; i++) {
+
+                int p = PieceUtils.CordinatesToInt(i, y);
+                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
+                    break;
+                }
+
+                stripe.Add(PieceUtils.CordinatesToInt(i, y));
+                if (i == 2) {
+                    return (true, stripe);
+                }
+            }
+
+            //check diag
+            stripe.Clear();
+            for (int c = 0, r = 0; c < 3; c++) {
+
+                int p = PieceUtils.CordinatesToInt(r, c);
+                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
+                    break;
+                }
+                stripe.Add(PieceUtils.CordinatesToInt(r, c));
+                if (c == 2) {
+                    return (true, stripe);
+                }
+                r++;
+            }
+
+            //check anti diag
+            stripe.Clear();
+            for (int c = 0, r = 2; c < 3; c++) {
+
+                int p = PieceUtils.CordinatesToInt(r, c);
+                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
+                    break;
+                }
+
+                stripe.Add(PieceUtils.CordinatesToInt(r, c));
+                if (c == 2) {
+                    return (true, stripe);
+                }
+                r--;
+            }
+
+            stripe.Clear();
+            return (false, stripe);
+        }
+        #endregion
+
+        #region event handlers
         protected override void OnPaint(PaintEventArgs e) {
-           DrawBoard(e.Graphics);
-           DrawCursor(e.Graphics);
+            DrawBoard(e.Graphics);
+            DrawCursor(e.Graphics);
 
             base.OnPaint(e);
         }
 
+        //this is used becase to keep it always square on diff screens
         protected override void OnSizeChanged(EventArgs e) {
             Size size = new(squareSize * 3, squareSize * 3);
-           
+
             if (!Size.Equals(size)) {
                 Size = size;
             }
 
-            base.OnSizeChanged(e);  
+            base.OnSizeChanged(e);
         }
         protected override void OnClick(EventArgs e) {
             MouseEventArgs args = (MouseEventArgs)e;
 
+
             if (args.Button == MouseButtons.Right) {
+                legalMoves.Clear();
                 currentPosition = -1;
                 currentPiece = null;
 
@@ -127,28 +273,92 @@
                 return;
             }
 
-            int position = BoardPositionCursor(); 
+            int position = BoardPositionCursor();
 
-            if (currentPiece == null && pieces.ContainsKey(position)) {
-                currentPosition = position;
-                currentPiece = pieces[position];
+            if (state == State.Playing) {
+                if (currentPiece == null && pieces.ContainsKey(position) && pieces[position].Color() == currentColor) {
+                    currentPosition = position;
+                    currentPiece = pieces[position];
 
-                legalMoves = currentPiece.LegalMoves(pieces, position).ToHashSet();
+                    legalMoves = currentPiece.LegalMoves(pieces, position, totalMoves).ToHashSet();
+                } else if (currentPiece != null && legalMoves.Contains(position)) {
 
-            } else if (currentPiece != null 
-                && !pieces.ContainsKey(position) 
-                && legalMoves.Contains(position)) 
-           {
-                pieces.Remove(currentPosition);
-                pieces.Add(position, currentPiece);
+                    //wizard swap
+                    if (currentPiece.GetType() == typeof(Wizard) && pieces.ContainsKey(position)) {
+                        pieces.Remove(currentPosition);
 
-                currentPosition = -1;
-                currentPiece = null;
+                        var swap = pieces[position];
+                        pieces.Remove(position);
+
+                        pieces.Add(currentPosition, swap);
+                        pieces.Add(position, currentPiece);
+
+                    } else {
+                        pieces.Remove(currentPosition);
+                        pieces.Add(position, currentPiece);
+                    }
+
+                    currentPosition = -1;
+                    currentPiece = null;
+                    legalMoves.Clear();
+
+                    var start = currentColor == PieceColor.White ? whiteStart : blackStart;
+                    int count = 0;
+                    
+                    foreach (var piece in start) {
+                        if (pieces.ContainsKey(piece.Key) && pieces[piece.Key] == piece.Value) {
+                            count++;
+                            continue;
+                        }
+                    }
+
+                    bool won = false;
+                    List<int>? stripe = null;
+
+                    if (count != 3) {
+                        (won, stripe) = Check(position);
+                    }
+
+                    if (won) {
+                        main.GameWin(currentColor);
+                        this.stripe = stripe?.ToHashSet();
+                        Invalidate();
+                    } else {
+                        totalMoves++;
+                        currentColor = currentColor == PieceColor.White ? PieceColor.Black : PieceColor.White;
+                        main.UpdateColor(currentColor);
+                    }
+                }
+
+            } else if (state == State.Setup && legalMoves.Contains(position)) {
+                main.GameClick(position);
             }
 
             Invalidate();
 
-            base.OnClick(e); 
+            base.OnClick(e);
         }
+        #endregion
+
+        #region getters & setters
+        public void SetMain(Main main) {
+            this.main = main;
+        }
+        public void SetLegalMoves(List<int> moves) {
+            legalMoves = moves.ToHashSet();
+            Invalidate();
+        }
+        public Dictionary<int, IPiece> GetPieces() {
+            return pieces;
+        }
+
+        public void SetState(State state) {
+            this.state = state;
+        }
+
+        public State GetState() {
+            return state;
+        }
+        #endregion
     }
 }

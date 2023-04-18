@@ -1,6 +1,6 @@
 ﻿namespace TicTacChess {
     using Cordinates = Tuple<int, int>;
-    enum PieceColor {
+    public enum PieceColor {
         White,
         Black
     }
@@ -15,10 +15,9 @@
         DownRight,
     }
     
-
     interface IPiece {
         public PieceColor Color();
-        public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position);
+        public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position, int totalMoves);
         public Image Image();
     }
 

@@ -14,7 +14,7 @@
             this.color = color;
         }
 
-        public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position) {  
+        public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position, int totalMoves) {  
             List<int> legalMoves = new();
 
             Cordinates cords = PieceUtils.IntToCordinates(position);

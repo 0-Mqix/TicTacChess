@@ -123,6 +123,16 @@ namespace TicTacChess.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap b_w {
+            get {
+                object obj = ResourceManager.GetObject("b_w", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap w_b {
             get {
                 object obj = ResourceManager.GetObject("w_b", resourceCulture);
@@ -176,6 +186,16 @@ namespace TicTacChess.Properties {
         internal static System.Drawing.Bitmap w_r {
             get {
                 object obj = ResourceManager.GetObject("w_r", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap w_w {
+            get {
+                object obj = ResourceManager.GetObject("w_w", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
