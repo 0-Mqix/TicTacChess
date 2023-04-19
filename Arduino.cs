@@ -142,7 +142,7 @@ namespace TicTacChess {
             serialPort.Close();
             
             serialPort.PortName = port;
-            statusLabel.Text = "Connecting to" + port +"...";
+            statusLabel.Text = "Connecting to " + port;
             
             try {
                 serialPort.Open();
