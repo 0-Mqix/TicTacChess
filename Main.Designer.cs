@@ -42,9 +42,14 @@
             this.useArduinoCheckBox = new System.Windows.Forms.CheckBox();
             this.startButton = new System.Windows.Forms.Button();
             this.arduinoGroupBox = new System.Windows.Forms.GroupBox();
+            this.portsComboBox = new System.Windows.Forms.ComboBox();
+            this.scanButton = new System.Windows.Forms.Button();
+            this.portsLabel = new System.Windows.Forms.Label();
+            this.adruinoStatusLabel = new System.Windows.Forms.Label();
+            this.prefixArduinoStatusLabel = new System.Windows.Forms.Label();
             this.enableArduinoLabel = new System.Windows.Forms.Label();
-            this.arduinoProgress = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.arduinoQueueLabel = new System.Windows.Forms.Label();
+            this.arduinoQueueProgressBar = new System.Windows.Forms.ProgressBar();
             this.pieceSelectorGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorKnight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieceSelectorRook)).BeginInit();
@@ -191,13 +196,14 @@
             // 
             // useArduinoCheckBox
             // 
+            this.useArduinoCheckBox.AutoCheck = false;
             this.useArduinoCheckBox.AutoSize = true;
-            this.useArduinoCheckBox.Location = new System.Drawing.Point(155, 31);
+            this.useArduinoCheckBox.Location = new System.Drawing.Point(155, 25);
             this.useArduinoCheckBox.Name = "useArduinoCheckBox";
             this.useArduinoCheckBox.Size = new System.Drawing.Size(22, 21);
             this.useArduinoCheckBox.TabIndex = 17;
             this.useArduinoCheckBox.UseVisualStyleBackColor = true;
-            this.useArduinoCheckBox.CheckedChanged += new System.EventHandler(this.UseArduino_Changed);
+            this.useArduinoCheckBox.Click += new System.EventHandler(this.UseArduino_Click);
             // 
             // startButton
             // 
@@ -211,21 +217,72 @@
             // 
             // arduinoGroupBox
             // 
+            this.arduinoGroupBox.Controls.Add(this.portsComboBox);
+            this.arduinoGroupBox.Controls.Add(this.scanButton);
+            this.arduinoGroupBox.Controls.Add(this.portsLabel);
+            this.arduinoGroupBox.Controls.Add(this.adruinoStatusLabel);
+            this.arduinoGroupBox.Controls.Add(this.prefixArduinoStatusLabel);
             this.arduinoGroupBox.Controls.Add(this.enableArduinoLabel);
-            this.arduinoGroupBox.Controls.Add(this.arduinoProgress);
-            this.arduinoGroupBox.Controls.Add(this.progressBar1);
+            this.arduinoGroupBox.Controls.Add(this.arduinoQueueLabel);
+            this.arduinoGroupBox.Controls.Add(this.arduinoQueueProgressBar);
             this.arduinoGroupBox.Controls.Add(this.useArduinoCheckBox);
             this.arduinoGroupBox.Location = new System.Drawing.Point(12, 494);
             this.arduinoGroupBox.Name = "arduinoGroupBox";
-            this.arduinoGroupBox.Size = new System.Drawing.Size(558, 285);
+            this.arduinoGroupBox.Size = new System.Drawing.Size(558, 155);
             this.arduinoGroupBox.TabIndex = 19;
             this.arduinoGroupBox.TabStop = false;
             this.arduinoGroupBox.Text = "Arduino";
             // 
+            // portsComboBox
+            // 
+            this.portsComboBox.FormattingEnabled = true;
+            this.portsComboBox.Location = new System.Drawing.Point(210, 108);
+            this.portsComboBox.Name = "portsComboBox";
+            this.portsComboBox.Size = new System.Drawing.Size(182, 33);
+            this.portsComboBox.TabIndex = 25;
+            this.portsComboBox.SelectedIndexChanged += new System.EventHandler(this.PortsComboBox_SelectedIndexChanged);
+            // 
+            // scanButton
+            // 
+            this.scanButton.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.scanButton.Location = new System.Drawing.Point(155, 108);
+            this.scanButton.Name = "scanButton";
+            this.scanButton.Size = new System.Drawing.Size(49, 33);
+            this.scanButton.TabIndex = 24;
+            this.scanButton.Text = "scan";
+            this.scanButton.UseVisualStyleBackColor = true;
+            this.scanButton.Click += new System.EventHandler(this.ScanButton_Click);
+            // 
+            // portsLabel
+            // 
+            this.portsLabel.AutoSize = true;
+            this.portsLabel.Location = new System.Drawing.Point(6, 111);
+            this.portsLabel.Name = "portsLabel";
+            this.portsLabel.Size = new System.Drawing.Size(54, 25);
+            this.portsLabel.TabIndex = 23;
+            this.portsLabel.Text = "ports";
+            // 
+            // adruinoStatusLabel
+            // 
+            this.adruinoStatusLabel.AutoSize = true;
+            this.adruinoStatusLabel.Location = new System.Drawing.Point(155, 80);
+            this.adruinoStatusLabel.Name = "adruinoStatusLabel";
+            this.adruinoStatusLabel.Size = new System.Drawing.Size(0, 25);
+            this.adruinoStatusLabel.TabIndex = 22;
+            // 
+            // prefixArduinoStatusLabel
+            // 
+            this.prefixArduinoStatusLabel.AutoSize = true;
+            this.prefixArduinoStatusLabel.Location = new System.Drawing.Point(6, 80);
+            this.prefixArduinoStatusLabel.Name = "prefixArduinoStatusLabel";
+            this.prefixArduinoStatusLabel.Size = new System.Drawing.Size(59, 25);
+            this.prefixArduinoStatusLabel.TabIndex = 21;
+            this.prefixArduinoStatusLabel.Text = "status";
+            // 
             // enableArduinoLabel
             // 
             this.enableArduinoLabel.AutoSize = true;
-            this.enableArduinoLabel.Location = new System.Drawing.Point(6, 27);
+            this.enableArduinoLabel.Location = new System.Drawing.Point(6, 22);
             this.enableArduinoLabel.Name = "enableArduinoLabel";
             this.enableArduinoLabel.Size = new System.Drawing.Size(64, 25);
             this.enableArduinoLabel.TabIndex = 20;
@@ -233,19 +290,19 @@
             // 
             // arduinoProgress
             // 
-            this.arduinoProgress.AutoSize = true;
-            this.arduinoProgress.Location = new System.Drawing.Point(6, 58);
-            this.arduinoProgress.Name = "arduinoProgress";
-            this.arduinoProgress.Size = new System.Drawing.Size(103, 25);
-            this.arduinoProgress.TabIndex = 19;
-            this.arduinoProgress.Text = "queue (0/0)";
+            this.arduinoQueueLabel.AutoSize = true;
+            this.arduinoQueueLabel.Location = new System.Drawing.Point(6, 52);
+            this.arduinoQueueLabel.Name = "arduinoProgress";
+            this.arduinoQueueLabel.Size = new System.Drawing.Size(103, 25);
+            this.arduinoQueueLabel.TabIndex = 19;
+            this.arduinoQueueLabel.Text = "queue (0/0)";
             // 
-            // progressBar1
+            // arduinoQueueProgressBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(155, 58);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(372, 25);
-            this.progressBar1.TabIndex = 18;
+            this.arduinoQueueProgressBar.Location = new System.Drawing.Point(155, 52);
+            this.arduinoQueueProgressBar.Name = "arduinoQueueProgressBar";
+            this.arduinoQueueProgressBar.Size = new System.Drawing.Size(372, 25);
+            this.arduinoQueueProgressBar.TabIndex = 18;
             // 
             // pieceSelectorGroupBox
             // 
@@ -267,7 +324,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(582, 791);
+            this.ClientSize = new System.Drawing.Size(582, 675);
             this.Controls.Add(this.pieceSelectorGroupBox);
             this.Controls.Add(this.arduinoGroupBox);
             this.Controls.Add(this.startButton);
@@ -310,8 +367,13 @@
         private Button startButton;
         private GroupBox arduinoGroupBox;
         private GroupBox pieceSelectorGroupBox;
-        private Label arduinoProgress;
-        private ProgressBar progressBar1;
+        private Label arduinoQueueLabel;
+        private ProgressBar arduinoQueueProgressBar;
         private Label enableArduinoLabel;
+        private Label prefixArduinoStatusLabel;
+        private Label adruinoStatusLabel;
+        private ComboBox portsComboBox;
+        private Button scanButton;
+        private Label portsLabel;
     }
 }

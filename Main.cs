@@ -7,8 +7,10 @@ namespace TicTacChess {
 
         Dictionary<string, IPiece> whitePieces = new();
         Dictionary<string, IPiece> blackPieces = new();
-
+          
         string? currentPiece;
+
+        Arduino arduino;
 
         public Main() {
             InitializeComponent();
@@ -23,8 +25,10 @@ namespace TicTacChess {
                 pieceSelectorWizard
             };
 
-            game.SetMain(this);
+            arduino = new Arduino(game, portsComboBox, adruinoStatusLabel, arduinoQueueLabel, arduinoQueueProgressBar);
 
+            game.SetMain(this);
+        
             Reset();
         }
 
@@ -97,8 +101,11 @@ namespace TicTacChess {
             UpdateMenu();
         }
 
-        private void UseArduino_Changed(object sender, EventArgs e) {
-
+        private void UseArduino_Click(object sender, EventArgs e) {
+            if (game.GetState() == State.Setup) {
+                arduino.enabled = !arduino.enabled;
+                useArduinoCheckBox.Checked = arduino.enabled;
+            }
         }
 
         public void UpdateColor(PieceColor color) {
@@ -148,26 +155,25 @@ namespace TicTacChess {
         private void Reset() {
             statusLabel.Text = "State: Setup";
 
-            game.SetState(State.Setup);
+            if (game.GetState() == State.Setup) {
+                whitePieces.Clear();
+                whitePieces.Add("pawn", new Pawn(PieceColor.White));
+                whitePieces.Add("knight", new Knight(PieceColor.White));
+                whitePieces.Add("rook", new Rook(PieceColor.White));
+                whitePieces.Add("queen", new Queen(PieceColor.White));
+                whitePieces.Add("king", new King(PieceColor.White));
+                whitePieces.Add("wizard", new Wizard(PieceColor.White));
+
+                blackPieces.Clear();
+                blackPieces.Add("pawn", new Pawn(PieceColor.Black));
+                blackPieces.Add("knight", new Knight(PieceColor.Black));
+                blackPieces.Add("rook", new Rook(PieceColor.Black));
+                blackPieces.Add("queen", new Queen(PieceColor.Black));
+                blackPieces.Add("king", new King(PieceColor.Black));
+                blackPieces.Add("wizard", new Wizard(PieceColor.Black));
+            }
+
             game.Reset();
-            game.Invalidate();
-
-            whitePieces.Clear();
-            whitePieces.Add("pawn", new Pawn(PieceColor.White));
-            whitePieces.Add("knight", new Knight(PieceColor.White));
-            whitePieces.Add("rook", new Rook(PieceColor.White));
-            whitePieces.Add("queen", new Queen(PieceColor.White));
-            whitePieces.Add("king", new King(PieceColor.White));
-            whitePieces.Add("wizard", new Wizard(PieceColor.White));
-
-            blackPieces.Clear();
-            blackPieces.Add("pawn", new Pawn(PieceColor.Black));
-            blackPieces.Add("knight", new Knight(PieceColor.Black));
-            blackPieces.Add("rook", new Rook(PieceColor.Black));
-            blackPieces.Add("queen", new Queen(PieceColor.Black));
-            blackPieces.Add("king", new King(PieceColor.Black));
-            blackPieces.Add("wizard", new Wizard(PieceColor.Black));
-
             UpdateMenu();
         }
 
@@ -175,6 +181,14 @@ namespace TicTacChess {
 
             statusLabel.Text = $"State: {(currentColor == PieceColor.White ? "White" : "Black")} won the game";
             game.SetState(State.Finished);
+        }
+
+        private void PortsComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            arduino.Connect(portsComboBox.Text);
+        }
+
+        private void ScanButton_Click(object sender, EventArgs e) {
+            arduino.Scan();
         }
     }
 }

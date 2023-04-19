@@ -14,7 +14,7 @@
         DownLeft,
         DownRight,
     }
-    
+   
     interface IPiece {
         public PieceColor Color();
         public List<int> LegalMoves(Dictionary<int, IPiece> pieces, int position, int totalMoves);
@@ -32,6 +32,7 @@
             return cordinates.Item1 + (cordinates.Item2 * 3);
         }
         public static int CordinatesToInt(int x, int y) {
+            //to check if inbound
             if (x > 2 || y > 2 || x < 0 || y < 0) {
                 return -1;
             }
@@ -65,6 +66,9 @@
 
             int p = position;
 
+            //this is something like a ray cast that can go in the directions in the Direction Enum
+            //p == position is to jump start it
+            //the big && statements are to check if inbound  
             while (p == position || !pieces.ContainsKey(p) && pX < 3 && pY < 3 && pY >= 0 && pX >= 0) {
 
                 if (p != position) { 

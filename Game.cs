@@ -8,26 +8,27 @@
     }
 
     internal class Game : Panel {
-         Main main;
+        Main main;
+        Arduino arduino;
 
         readonly int squareSize = 100;
         readonly int legalMoveDotSize = 25;
 
         //dictonary to store the piece with its location
         Dictionary<int, IPiece> pieces = new();
-        
+
         //a hash set for easy lookup to check if a position is in the legal moves
         HashSet<int> legalMoves = new();
-        
+
         IPiece? currentPiece = null;
         int currentPosition = -1;
-        
+
 
         //if the game has won this is set and used in the drawing of the squares to make them green
         HashSet<int>? stripe;
         Dictionary<int, IPiece> whiteStart = new();
         Dictionary<int, IPiece> blackStart = new();
-        
+
         State state = State.Setup;
         PieceColor currentColor = PieceColor.White;
         int totalMoves;
@@ -35,21 +36,30 @@
         public Game() : base() {
             DoubleBuffered = true;
             Size = new Size(squareSize * 3, squareSize * 3);
-          }
+        }
 
 
         public void Reset() {
-            pieces.Clear();
-            legalMoves.Clear();
+            if (state == State.Playing || state == State.Finished) {
+                arduino.Reset();
+                pieces = whiteStart.Union(blackStart).ToDictionary(pair => pair.Key, pair => pair.Value);
+            } else {
+                pieces.Clear();
+            }
+            
             whiteStart.Clear();
             blackStart.Clear();
-            
+            legalMoves.Clear();
+
             currentPiece = null;
             currentPosition = -1;
 
             stripe = null;
             totalMoves = 0;
             currentColor = PieceColor.White;
+            state = State.Setup;
+
+            Invalidate();
         }
 
         //the control has to be redrawn so it draws the selected piece
@@ -57,12 +67,12 @@
             Invalidate();
             base.OnMouseMove(e);
         }
-            
+
         public void DrawCursor(Graphics graphics) {
             if (currentPiece == null) {
                 return;
             }
-            
+
             Image image = currentPiece.Image();
 
             int w = image.Width / 3;
@@ -91,8 +101,8 @@
 
                 if (stripe != null && stripe.Contains(i)) {
                     Pen stripePen = new(Color.LightSeaGreen);
-                    graphics.FillRectangle(stripePen.Brush, actualX + 10, actualY + 10, squareSize-20, squareSize-20);
-                    stripePen.Dispose();   
+                    graphics.FillRectangle(stripePen.Brush, actualX + 10, actualY + 10, squareSize - 20, squareSize - 20);
+                    stripePen.Dispose();
                 }
 
 
@@ -101,22 +111,22 @@
 
                 if (pieces.ContainsKey(i) && currentPosition != i) {
                     Image image = pieces[i].Image();
-                   
+
                     //attempt to draw image in center
                     graphics.DrawImage(image, actualX + squareSize / 4, actualY, image.Width / 3, image.Height / 3);
                     image.Dispose();
                 }
-                
+
                 if (legalMoves.Contains(i)) {
                     //attempt to to draw a circle in the center
                     int centerOffset = (squareSize / 2 + legalMoveDotSize) / 2;
                     Pen legalMovePen = new(pieces.ContainsKey(i) ? Color.BlueViolet : Color.Gray);
-                    
+
                     graphics.FillEllipse(
                         legalMovePen.Brush,
                         actualX + centerOffset, actualY + centerOffset,
                         legalMoveDotSize, legalMoveDotSize);
-               
+
                     legalMovePen.Dispose();
                 }
 
@@ -158,8 +168,8 @@
                 if (piece.Value.Color() == PieceColor.Black) {
                     blackStart.Add(piece.Key, piece.Value);
                     continue;
-                }   
-                
+                }
+
                 whiteStart.Add(piece.Key, piece.Value);
             }
 
@@ -173,7 +183,7 @@
             var cords = PieceUtils.IntToCordinates(postion);
 
             int x = cords.Item1;
-            int y = cords.Item2;    
+            int y = cords.Item2;
 
             var stripe = new List<int>();
 
@@ -292,10 +302,17 @@
 
                         pieces.Add(currentPosition, swap);
                         pieces.Add(position, currentPiece);
-
+                            
+                        //swap pieces arduino;
+                        arduino.Swap(currentPosition, position);
+                        arduino.Zero();
                     } else {
                         pieces.Remove(currentPosition);
                         pieces.Add(position, currentPiece);
+
+                        //move pieces arduino
+                        arduino.Move(currentPosition, position);
+                        arduino.Zero();
                     }
 
                     currentPosition = -1;
@@ -304,7 +321,7 @@
 
                     var start = currentColor == PieceColor.White ? whiteStart : blackStart;
                     int count = 0;
-                    
+
                     foreach (var piece in start) {
                         if (pieces.ContainsKey(piece.Key) && pieces[piece.Key] == piece.Value) {
                             count++;
@@ -359,6 +376,33 @@
         public State GetState() {
             return state;
         }
+
+        public (bool, int) GetEmptyPosition() {
+            for (int i = 0; i < 9; i++) {
+                if (!pieces.ContainsKey(i)) {
+                    return (true, i);
+                }
+            }
+
+            return (false, -1);
+        }
+
+        public (Dictionary<int, IPiece>, Dictionary<int, IPiece>) GetStartPositions() {
+            return (whiteStart, blackStart);
+        }
+
+        public int GetPieceLocation(PieceColor color, Type type) {
+            foreach (var piece in pieces) {
+                if (piece.Value.GetType() == type && piece.Value.Color() == color) {
+                    return piece.Key;
+                }
+            }
+            return -1;
+        }
+        public void SetArduino(Arduino arduino) {
+            this.arduino = arduino;
+        }
+
         #endregion
     }
 }
