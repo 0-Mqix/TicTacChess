@@ -62,12 +62,7 @@
             Invalidate();
         }
 
-        //the control has to be redrawn so it draws the selected piece
-        protected override void OnMouseMove(MouseEventArgs e) {
-            Invalidate();
-            base.OnMouseMove(e);
-        }
-
+     
         public void DrawCursor(Graphics graphics) {
             if (currentPiece == null) {
                 return;
@@ -176,83 +171,15 @@
             main.UpdateColor(PieceColor.White);
         }
 
-        #region check board
-        //returns a bool for the win, and a list of the positions that makes the stripe of the winning pieces
-        public (bool, List<int>) Check(int postion) {
-
-            var cords = PieceUtils.IntToCordinates(postion);
-
-            int x = cords.Item1;
-            int y = cords.Item2;
-
-            var stripe = new List<int>();
-
-            //check col
-            for (int i = 0; i < 3; i++) {
-
-                int p = PieceUtils.CordinatesToInt(x, i);
-                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
-                    break;
-                }
-
-                stripe.Add(PieceUtils.CordinatesToInt(x, i));
-                if (i == 2) {
-                    return (true, stripe);
-                }
-            }
-
-            //check row
-            stripe.Clear();
-            for (int i = 0; i < 3; i++) {
-
-                int p = PieceUtils.CordinatesToInt(i, y);
-                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
-                    break;
-                }
-
-                stripe.Add(PieceUtils.CordinatesToInt(i, y));
-                if (i == 2) {
-                    return (true, stripe);
-                }
-            }
-
-            //check diag
-            stripe.Clear();
-            for (int c = 0, r = 0; c < 3; c++) {
-
-                int p = PieceUtils.CordinatesToInt(r, c);
-                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
-                    break;
-                }
-                stripe.Add(PieceUtils.CordinatesToInt(r, c));
-                if (c == 2) {
-                    return (true, stripe);
-                }
-                r++;
-            }
-
-            //check anti diag
-            stripe.Clear();
-            for (int c = 0, r = 2; c < 3; c++) {
-
-                int p = PieceUtils.CordinatesToInt(r, c);
-                if (!pieces.ContainsKey(p) || pieces[p].Color() != currentColor) {
-                    break;
-                }
-
-                stripe.Add(PieceUtils.CordinatesToInt(r, c));
-                if (c == 2) {
-                    return (true, stripe);
-                }
-                r--;
-            }
-
-            stripe.Clear();
-            return (false, stripe);
-        }
-        #endregion
 
         #region event handlers
+        
+        //the control has to be redrawn so it draws the selected piece
+        protected override void OnMouseMove(MouseEventArgs e) {
+            Invalidate();
+            base.OnMouseMove(e);
+        }
+
         protected override void OnPaint(PaintEventArgs e) {
             DrawBoard(e.Graphics);
             DrawCursor(e.Graphics);
@@ -333,7 +260,7 @@
                     List<int>? stripe = null;
 
                     if (count != 3) {
-                        (won, stripe) = Check(position);
+                        (won, stripe) = GameUtils.CheckWinner(pieces, position, currentColor);
                     }
 
                     if (won) {

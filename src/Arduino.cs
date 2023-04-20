@@ -81,10 +81,10 @@ namespace TicTacChess {
         void UpdateQueueDisplay() {
             int value = lastFinishedActionId;
             
-            bar.Maximum = totalActionCount;
+            bar.Maximum = totalActionCount - 1;
             bar.Value = value;
 
-            queueLabel.Text = $"queue ({value}/{totalActionCount})";
+            queueLabel.Text = $"queue ({value}/{totalActionCount - 1})";
             bar.PerformStep();
         }
 
@@ -103,7 +103,9 @@ namespace TicTacChess {
                 Utils.Println($"[ARDUINO] action done: id:{action.id} {action.message}");
                 
                 lastFinishedActionId = action.id;
-                UpdateQueueDisplay();
+
+                //needs to invoke the function inside the thread of the control orgin
+                bar.Invoke(UpdateQueueDisplay);
 
                 if (actions.Count > 0) {
                     serialPort.Write(actions.Peek().message);
